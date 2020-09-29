@@ -1,0 +1,39 @@
+version: "3.1"
+
+services:
+  web:
+    build: .
+    volumes:
+      - "./hotel-management-react-web:/app"
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - api
+
+  api:
+    build: .
+    environment:
+      MYSQL_ROOT_PASSWORD: shirleyDBPasswordRoot
+      MYSQL_DATABASE: HotelManagementDB
+      MYSQL_USER: shirley
+      MYSQL_PASSWORD: shirleyDBPassword
+    volumes:
+      - "./hotel-management-nodejs-server:/app"
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: shirleyDBPasswordRoot
+      MYSQL_DATABASE: HotelManagementDB
+      MYSQL_USER: shirley
+      MYSQL_PASSWORD: shirleyDBPassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - /home/shirley/Documents/mysqlDatabase:/var/lib/mysql
